@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useMemo } from "react";
 import {
     BrowserRouter,
     Routes,
@@ -12,25 +12,26 @@ import Nav from '../Nav/Nav';
 interface FavListContextType {
   favList: any[];
   addFavList: (list: any) => void;
-  removeFavList: (list: any) => void;
+  removeFavList: (value: string) => void;
 }
 
 export const FavListContext = createContext<FavListContextType>({
   favList: [],
   addFavList: () => {},
-  removeFavList: () => {},
+  removeFavList: (value) => {},
 });
 
 const App = () => {
   const [favList, setFavList] = useState<any[]>([]);
   const addFavList = (list: any) => setFavList(favList => [...favList, list]);
-  const removeFavList = (list: any) => setFavList(favList => [favList, ...list]);
+  const removeFavList = (value: any) => setFavList(prev => prev.filter(list => list.name !== value ));
+
+  const contextValue = useMemo(() => ({ favList, addFavList, removeFavList }), [favList]);
 
   return (
-    
       <BrowserRouter>
           <Nav/>
-          <FavListContext.Provider value={{ favList, addFavList, removeFavList }}>
+          <FavListContext.Provider value={contextValue}>
           <Routes>
               <Route path="/" Component={Home}/>
               <Route path="/details" Component={DetailsView}/>
