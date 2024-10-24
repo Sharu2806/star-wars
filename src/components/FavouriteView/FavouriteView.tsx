@@ -21,8 +21,11 @@ const FavouriteView = () => {
   }, []);
 
   const onDelete = (name: string) => {
-    setListItems(prev => prev.filter(list => list !== name ))
-    removeFavList(listItems);
+    setListItems(listItems => listItems.filter(list =>
+      list.name !== name
+    ))
+    
+    removeFavList(name);
   }
   return (
     <Container>
